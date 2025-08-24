@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>סיכום משתה — פיטמאסטר אלונים </title>
+
+  <!-- Heebo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300..900&display=swap" rel="stylesheet">
+
+  <!-- favicon יתעדכן דינמית דרך השרת -->
+  <link rel="icon" type="image/png" href="">
+
+  <style>
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    html { font-size: 16px; }
+    @media (max-width: 768px){ html { font-size: 18px; } }
+    @media (max-width: 420px){ html { font-size: 19px; } }
+
+    :root{
+      --bg:#0B0F17; --bg2:#0F172A; --card:rgba(18,24,38,0.85);
+      --stroke:rgba(255,255,255,.08); --muted:#9CA3AF; --text:#E5E7EB; --heading:#F3F4F6;
+      --accent:#D97706; --accent2:#F59E0B; --ok:#10B981; --danger:#EF4444;
+      --shadow:0 18px 45px rgba(0,0,0,.35); --radius:18px; --radius-sm:14px; --radius-lg:22px;
+    }
+    *{ box-sizing:border-box }
+    html,body{
+      margin:0; padding:0;
+      font-family:"Heebo",system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Noto Sans Hebrew","Noto Sans",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 500px at 80% -10%, rgba(217,119,6,.18), transparent 60%),
+        radial-gradient(900px 450px at -10% 20%, rgba(245,158,11,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      min-height:100dvh;
+    }
+    .wrap{ max-width:1040px; margin:auto; padding:24px }
+    header{
+      display:flex; align-items:center; gap:18px;
+      padding:18px 0 26px;
+      border-bottom:1px solid var(--stroke);
+    }
+    header img{
+      height:clamp(64px, 10vw, 84px); width:clamp(64px, 10vw, 84px);
+      border-radius:50%; background:#fff; padding:6px; object-fit:cover;
+      box-shadow:var(--shadow);
+    }
+    h1{ margin:0; font-size: clamp(28px, 6.2vw, 44px); line-height:1.15; letter-spacing:.2px; color:var(--heading); font-weight:900; }
+    .subtitle{ color:var(--muted); font-size:clamp(14px, 3.2vw, 16px); margin-top:6px }
+
+    .toggle-xl{
+      margin-inline-start:auto;
+      background:linear-gradient(180deg,var(--accent2),var(--accent));
+      color:#111; border:none; padding:10px 14px;
+      border-radius:12px; font-weight:900; cursor:pointer;
+      box-shadow:0 10px 22px rgba(217,119,6,.25);
+      font-size:14px;
+    }
+
+    .grid{ display:grid; grid-template-columns:1fr; gap:14px }
+    @media (min-width:760px){ .grid{ grid-template-columns:repeat(4,1fr) } }
+
+    .card{
+      background:var(--card); border:1px solid var(--stroke); border-radius:var(--radius);
+      padding:20px; box-shadow:var(--shadow); backdrop-filter: blur(6px); margin-top:18px;
+    }
+    .card > label, .section-title{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900; color:var(--heading);
+      font-size: clamp(18px, 4.4vw, 24px);
+      margin:0 0 12px 0;
+    }
+    label{ font-weight:800; font-size: clamp(15px, 3.6vw, 18px); color:var(--heading) }
+
+    input, select, textarea, button{ font-family:inherit; }
+    input[type="text"], input[type="date"], input[type="time"], select, textarea{
+      width:100%; padding:14px 16px; font-size: clamp(15px, 3.8vw, 16px); color:var(--text);
+      background:rgba(11,18,32,.8); border:1px solid var(--stroke); border-radius:var(--radius-sm);
+      outline:none; transition: box-shadow .2s, border-color .2s, transform .04s;
+    }
+    input::placeholder, textarea::placeholder{ color:#6B7280 }
+    input:focus, select:focus, textarea:focus{ border-color:var(--accent2); box-shadow:0 0 0 3px rgba(245,158,11,.2); }
+    textarea{ min-height:clamp(96px, 24vw, 140px); resize:vertical }
+
+    .pair{ display:grid; grid-template-columns:1fr 200px; gap:10px; margin-top:8px }
+    @media(max-width:560px){ .pair{ grid-template-columns:1fr; } }
+    .help{ color:var(--muted); font-size: clamp(13px, 3.2vw, 14px); margin:-6px 0 10px }
+
+    .submit{
+      width:100%; margin-top:14px;
+      background:linear-gradient(180deg, var(--accent2), var(--accent));
+      color:#111827; border:none; padding:16px 18px; border-radius:var(--radius-lg);
+      font-weight:900; font-size: clamp(16px, 4.2vw, 18px); letter-spacing:.3px; cursor:pointer;
+      box-shadow:0 14px 32px rgba(217,119,6,.25); transition: transform .05s ease, filter .2s ease;
+    }
+    .submit:hover{ filter:brightness(1.05) }
+    .submit:active{ transform:translateY(1px) }
+    .submit:disabled{ opacity:.6; cursor:not-allowed; filter:grayscale(.1) }
+
+    .toast{
+      position:fixed; top:16px; left:16px; right:16px; margin:auto; max-width:560px;
+      background:#0B1220; border:1px solid rgba(255,255,255,.1);
+      color:#D1FAE5; border-left:4px solid var(--ok);
+      padding:12px 14px; border-radius:14px; box-shadow:var(--shadow); display:none;
+      font-weight:700; font-size: clamp(14px, 3.6vw, 15px);
+    }
+    .toast.error{ color:#FECACA; border-left-color:var(--danger) }
+
+    .btn-secondary{
+      background:linear-gradient(180deg,#374151,#1F2937);
+      color:#fff; border:none; padding:12px 14px;
+      border-radius:14px; font-weight:800; cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.25);
+      font-size:clamp(14px, 3.6vw, 15px);
+    }
+    .btn-danger{
+      border:none;border-radius:12px;padding:10px 12px;background:#991B1B;color:#fff;cursor:pointer;
+      font-weight:800; font-size: clamp(13px, 3.4vw, 14px);
+    }
+
+    .modal-backdrop{
+      position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:50;
+    }
+    .modal{
+      width:min(920px, 92vw); max-height:85vh; overflow:auto;
+      background:#111827; border:1px solid var(--stroke); border-radius:18px; box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .modal h2{ margin:0 0 10px 0; color:#F3F4F6; font-size:clamp(20px,5vw,26px) }
+    .preview-block{ margin:0 0 12px 0; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,.08) }
+    .preview-title{ font-weight:900; color:#F3F4F6; margin-bottom:6px; font-size:clamp(16px,4vw,18px) }
+    .preview-body{ white-space:pre-wrap; color:#D1D5DB; font-size:clamp(14px,3.6vw,16px) }
+    .modal-actions{ display:flex; gap:10px; justify-content:flex-start; margin-top:12px }
+
+    @media (max-width: 768px){
+      html { font-size: 18px; }
+      .wrap { padding: 16px; }
+      header { padding-bottom: 18px; }
+      h1 { font-size: clamp(26px, 7vw, 34px); }
+      .subtitle { font-size: 15px; }
+
+      .card { padding: 16px; border-radius: 16px; box-shadow: 0 8px 22px rgba(0,0,0,.28); backdrop-filter: none; }
+      .grid { grid-template-columns: 1fr; gap: 12px; }
+
+      input[type="text"], input[type="date"], input[type="time"], select, textarea{
+        font-size: 17px; padding: 14px 16px; min-height: 48px;
+      }
+      textarea{ min-height: 140px; }
+
+      .card > label, .section-title { font-size: 20px; margin-bottom: 10px; }
+      .btn-secondary, .btn-danger, .submit { min-height: 48px; font-size: 17px; }
+
+      .modal { width: 94vw; max-height: 80vh; padding: 14px; }
+      .preview-title { font-size: 17px; }
+      .preview-body { font-size: 15px; }
+    }
+
+    @media (max-width: 768px){
+      .submit.sticky {
+        position: sticky;
+        bottom: 10px;
+        z-index: 40;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1024px){ html { font-size: 19px; } }
+    @media (max-width: 768px){  html { font-size: 21px; } }
+    @media (max-width: 480px){  html { font-size: 22px; } }
+
+    @media (max-width: 768px){
+      * { -webkit-tap-highlight-color: transparent; }
+      input, textarea, button, select { touch-action: manipulation; }
+    }
+    @media (max-width: 900px){
+      .wrap{ padding: 22px; }
+      header{ gap: 22px; padding: 20px 0 24px; }
+      header img{ height: 92px; width: 92px; }
+      h1{ font-size: clamp(32px, 7.6vw, 52px); }
+      .subtitle{ font-size: clamp(16px, 3.8vw, 19px); }
+      .grid{ grid-template-columns: 1fr; gap: 18px; }
+      .card{ padding: 24px; border-radius: 22px; box-shadow: 0 10px 26px rgba(0,0,0,.30); }
+      .card > label, .section-title{ font-size: clamp(20px, 5.4vw, 26px); margin-bottom: 12px; }
+      label{ font-size: clamp(17px, 4.4vw, 21px); }
+      input[type="text"], input[type="date"], input[type="time"], select, textarea{
+        font-size: clamp(17px, 4.6vw, 20px); padding: 16px 18px; min-height: 58px; line-height: 1.45;
+      }
+      textarea{ min-height: 160px; }
+      .pair{ grid-template-columns: 1fr; gap: 12px; }
+      .btn-secondary, .btn-danger, .submit{ min-height: 56px; font-size: clamp(17px, 4.6vw, 19px); border-radius: 18px; }
+      .submit.sticky{ position: sticky; bottom: 12px; z-index: 40; width: 100%; }
+      .modal{ width: 95vw; max-height: 82vh; padding: 18px; border-radius: 20px; }
+      .modal h2{ font-size: clamp(22px, 6vw, 26px); }
+      .preview-title{ font-size: clamp(18px, 4.8vw, 20px); }
+      .preview-body{ font-size: clamp(16px, 4.4vw, 18px); }
+    }
+    input::placeholder, textarea::placeholder{ color:#94A3B8; }
+
+    body.xl-mode { font-size: 22px; }
+    body.xl-mode h1 { font-size: clamp(38px, 7.5vw, 56px); }
+    body.xl-mode .subtitle { font-size: clamp(18px, 3.8vw, 20px); }
+    body.xl-mode .card { padding: 26px; border-radius: 22px; }
+    body.xl-mode .card > label, 
+    body.xl-mode .section-title { font-size: clamp(22px, 5.6vw, 28px); }
+    body.xl-mode label { font-size: clamp(19px, 4.8vw, 22px); }
+    body.xl-mode input[type="text"],
+    body.xl-mode input[type="date"],
+    body.xl-mode input[type="time"],
+    body.xl-mode select,
+    body.xl-mode textarea {
+      font-size: clamp(19px, 4.8vw, 22px);
+      padding: 18px 20px;
+      min-height: 62px;
+    }
+    body.xl-mode textarea { min-height: 190px; }
+    body.xl-mode .btn-secondary, 
+    body.xl-mode .btn-danger, 
+    body.xl-mode .submit {
+      min-height: 62px; 
+      font-size: clamp(18px, 4.8vw, 21px);
+      border-radius: 20px;
+    }
+    body.xl-mode .modal { width: 96vw; max-height: 84vh; padding: 20px; }
+    body.xl-mode .preview-title { font-size: clamp(20px, 5.2vw, 22px); }
+    body.xl-mode .preview-body { font-size: clamp(17px, 4.8vw, 19px); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img id="logo" alt="Pitmaster Logo"/>
+      <div>
+        <h1>פיטמאסטר אלונים — סיכום משתה פלור</h1>
+        <div class="subtitle">דו״ח סיכום משתה יומי</div>
+      </div>
+      <button class="toggle-xl" id="toggleXL" type="button">מצב ענק</button>
+    </header>
+
+    <!-- בסיס -->
+    <div class="card">
+      <div class="grid">
+        <div><label for="date">תאריך</label><input id="date" type="date" required autocomplete="off"></div>
+        <div><label for="time">שעת משתה</label><input id="time" type="time" required autocomplete="off"></div>
+        <div><label for="manager">שם המנהל</label>
+          <input id="manager" type="text" placeholder="שם מלא" required
+                 autocomplete="name" autocapitalize="words" inputmode="text">
+        </div>
+        <div><label for="pit">שם הפיט</label>
+          <input id="pit" type="text" placeholder="שם מלא" required
+                 autocomplete="name" autocapitalize="words" inputmode="text">
+        </div>
+      </div>
+    </div>
+
+    <!-- פירוט מנות — שורות דינמיות -->
+    <div class="card">
+      <div class="section-title">פירוט מנות</div>
+      <p class="help">לפרט בכל מנה על איכות הבשר, כמות הבשר, איכות התוספת וכמות התוספת.</p>
+      <div id="courses"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-start;margin-top:10px">
+        <button type="button" id="addCourse" class="btn-secondary">הוסף מנה נוספת</button>
+      </div>
+    </div>
+
+    <!-- יתר הסעיפים (חובה) -->
+    <div class="card"><label>בעיות במהלך המשתה</label><textarea id="issuesText" required></textarea></div>
+    <div class="card"><label>כמות סועדים</label><textarea id="guestsText" required></textarea></div>
+    <div class="card"><label>מספרי שולחנות והמלצרים</label><textarea id="tablesText" required></textarea></div>
+    <div class="card"><label>דברים שנפתחו</label><textarea id="openedText" required></textarea></div>
+    <div class="card"><label>חוסרים</label><textarea id="missingText" required></textarea></div>
+    <div class="card"><label>צוות פלור</label><textarea id="floorText" required></textarea></div>
+    <div class="card"><label>חוות דעת לקוחות</label><textarea id="floorCustomerFeedbackText" required></textarea></div>
+    <div class="card"><label>צוות מטבח</label><textarea id="kitchenText" required></textarea></div>
+    <div class="card"><label>אלכוהול שנמכר</label><textarea id="alcoholSoldText" required></textarea></div>
+    <div class="card"><label>אלכוהול שנמזג</label><textarea id="alcoholPouredText" required></textarea></div>
+    <div class="card"><label>תקלות בינוי</label><textarea id="buildFaultsText" required></textarea></div>
+    <div class="card"><label>התנהלות שוטפי כלים</label><textarea id="dishwashersConductText" required></textarea></div>
+    <div class="card"><label>הנחות\OTH</label><textarea id="discountsText" required></textarea></div>
+    <div class="card"><label>סיכום הפיטמאסטר</label><textarea id="pitmasterSummaryText" required></textarea></div>
+    <div class="card"><label>הערות נוספות</label><textarea id="extraNotesText" required></textarea></div>
+
+    <!-- כפתור שליחה דביק -->
+    <button id="preview" class="submit sticky">תצוגה מקדימה ושליחה</button>
+  </div>
+
+  <!-- מודל תצוגה מקדימה -->
+  <div id="backdrop" class="modal-backdrop">
+    <div class="modal">
+      <h2>תצוגה מקדימה</h2>
+      <div id="previewContent"></div>
+      <div class="modal-actions">
+        <button id="confirmSend" class="submit">שליחה עכשיו</button>
+        <button id="cancelPreview" class="btn-secondary" type="button">חזרה לעריכה</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">נשלח בהצלחה לילה טוב! ✨</div>
+  <div class="toast error" id="toastErr">תקלה בשליחה.</div>
+
+  <script>
+    google.script.run.withSuccessHandler(function(url){
+      document.getElementById('logo').src = url;
+      var fav = document.querySelector("link[rel='icon']");
+      if (fav) fav.href = url; else {
+        var lf = document.createElement('link'); lf.rel='icon'; lf.type='image/png'; lf.href=url; document.head.appendChild(lf);
+      }
+    }).getLogoDataUrl();
+
+    (function initXLToggle(){
+      var btn = document.getElementById('toggleXL');
+      function applyFromStorage(){
+        if (localStorage.getItem('xlMode') === 'true') {
+          document.body.classList.add('xl-mode');
+          btn.textContent = 'מצב רגיל';
+        } else {
+          document.body.classList.remove('xl-mode');
+          btn.textContent = 'מצב ענק';
+        }
+      }
+      btn.addEventListener('click', function(){
+        var on = !document.body.classList.contains('xl-mode');
+        localStorage.setItem('xlMode', String(on));
+        applyFromStorage();
+      });
+      applyFromStorage();
+    })();
+
+    var COURSE_OPTIONS = ['סלטים','מנה 1','מנה 2','מנה 3','מנה 4','מנה 5','מנה 6','מנה 7','קינוח'];
+    var coursesWrap = document.getElementById('courses');
+    var addBtn = document.getElementById('addCourse');
+
+    function createCourseRow(selected, details){
+      var row = document.createElement('div');
+      row.className = 'pair course-row';
+      row.style.marginTop = '8px';
+
+      var ta = document.createElement('textarea');
+      ta.placeholder = 'פרט כאן...';
+      ta.required = true;
+      if (details) ta.value = details;
+
+      var sel = document.createElement('select');
+      sel.required = true;
+      sel.innerHTML = '<option value="" disabled selected>בחר סעיף</option>' +
+        COURSE_OPTIONS.map(function(opt){ return '<option>'+opt+'</option>'; }).join('');
+      if (selected) sel.value = selected;
+
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.textContent = 'מחק שורה';
+      del.className = 'btn-danger';
+
+      row.appendChild(ta); row.appendChild(sel); row.appendChild(del);
+
+      function maybeAddNew(){
+        var last = coursesWrap.lastElementChild;
+        if (!last) return;
+        var lastSel = last.querySelector('select');
+        var lastTa  = last.querySelector('textarea');
+        if (lastSel && lastTa && lastSel.value && lastTa.value.trim().length>0) addCourseRow();
+        updateBtn();
+      }
+      sel.addEventListener('change', maybeAddNew);
+      ta.addEventListener('input', maybeAddNew);
+
+      del.addEventListener('click', function(){
+        row.remove();
+        if (!coursesWrap.querySelector('.course-row')) addCourseRow();
+        updateBtn();
+      });
+
+      coursesWrap.appendChild(row);
+    }
+    function addCourseRow(){ createCourseRow('', ''); }
+    addBtn.addEventListener('click', addCourseRow);
+    addCourseRow();
+
+    function allRequiredFilled(){
+      var baseOk = !!document.getElementById('date').value &&
+                   !!document.getElementById('time').value &&
+                   document.getElementById('manager').value.trim().length>0 &&
+                   document.getElementById('pit').value.trim().length>0;
+
+      var textareasOk = Array.from(document.querySelectorAll('textarea[required]'))
+        .every(function(t){ return t.value.trim().length>0; });
+
+      var rows = Array.from(document.querySelectorAll('.course-row'));
+      var atLeastOneFull = rows.some(function(r){
+        var s = r.querySelector('select');
+        var t = r.querySelector('textarea');
+        return s && s.value && t && t.value.trim().length>0;
+      });
+      return baseOk && textareasOk && atLeastOneFull;
+    }
+    function updateBtn(){ document.getElementById('preview').disabled = !allRequiredFilled(); }
+    document.addEventListener('input', updateBtn);
+    document.addEventListener('change', updateBtn);
+
+    var backdrop = document.getElementById('backdrop');
+
+    function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function blockHTML(title, body){
+      return '<div class="preview-block">'
+           +   '<div class="preview-title">'+ esc(title) +'</div>'
+           +   '<div class="preview-body">'+ esc(body) +'</div>'
+           + '</div>';
+    }
+
+    function buildPayload(){
+      var courses = Array.from(document.querySelectorAll('.course-row')).map(function(r){
+        return {
+          name: (r.querySelector('select')||{}).value || '',
+          details: ((r.querySelector('textarea')||{}).value || '').trim()
+        };
+      }).filter(function(c){ return c.name && c.details; });
+
+      return {
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        manager: document.getElementById('manager').value.trim(),
+        pit: document.getElementById('pit').value.trim(),
+        courses: courses,
+        issuesText: document.getElementById('issuesText').value,
+        guestsText: document.getElementById('guestsText').value,
+        tablesText: document.getElementById('tablesText').value,
+        openedText: document.getElementById('openedText').value,
+        missingText: document.getElementById('missingText').value,
+        floorText: document.getElementById('floorText').value,
+        floorCustomerFeedbackText: document.getElementById('floorCustomerFeedbackText').value,
+        kitchenText: document.getElementById('kitchenText').value,
+        alcoholSoldText: document.getElementById('alcoholSoldText').value,
+        alcoholPouredText: document.getElementById('alcoholPouredText').value,
+        buildFaultsText: document.getElementById('buildFaultsText').value,
+        dishwashersConductText: document.getElementById('dishwashersConductText').value,
+        discountsText: document.getElementById('discountsText').value,
+        pitmasterSummaryText: document.getElementById('pitmasterSummaryText').value,
+        extraNotesText: document.getElementById('extraNotesText').value,
+        __ua: navigator.userAgent || '',
+        __pageUrl: location.href || '',
+        nonce: (function(){
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+            var r = Math.random()*16|0, v = c=='x'?r:(r&0x3|0x8);
+            return v.toString(16);
+          });
+        })()
+      };
+    }
+
+    function openPreview(){
+      var p = buildPayload();
+      var coursesText = (p.courses||[]).map(function(c){ return c.name + ' — ' + c.details; }).join('\n');
+      var html = ''
+        + blockHTML('תאריך ושעה', p.date + '  ' + p.time)
+        + blockHTML('שם המנהל', p.manager)
+        + blockHTML('שם הפיט', p.pit)
+        + blockHTML('פירוט מנות', coursesText)
+        + blockHTML('בעיות במהלך המשתה', p.issuesText)
+        + blockHTML('כמות סועדים', p.guestsText)
+        + blockHTML('מספרי שולחנות והמלצרים', p.tablesText)
+        + blockHTML('דברים שנפתחו', p.openedText)
+        + blockHTML('חוסרים', p.missingText)
+        + blockHTML('צוות פלור', p.floorText)
+        + blockHTML('חוות דעת לקוחות – צוות פלור', p.floorCustomerFeedbackText)
+        + blockHTML('צוות מטבח', p.kitchenText)
+        + blockHTML('אלכוהול שנמכר', p.alcoholSoldText)
+        + blockHTML('אלכוהול שנמזג', p.alcoholPouredText)
+        + blockHTML('תקלות בינוי', p.buildFaultsText)
+        + blockHTML('התנהלות שוטפי כלים', p.dishwashersConductText)
+        + blockHTML('הנחות/OTH', p.discountsText)
+        + blockHTML('סיכום הפיטמאסטר', p.pitmasterSummaryText)
+        + blockHTML('הערות נוספות', p.extraNotesText);
+      document.getElementById('previewContent').innerHTML = html;
+      backdrop.style.display = 'flex';
+    }
+    function closePreview(){ backdrop.style.display = 'none'; }
+
+    var isSubmitting = false;
+
+    document.getElementById('preview').addEventListener('click', function(){
+      if (!allRequiredFilled()) return;
+      openPreview();
+    });
+    document.getElementById('cancelPreview').addEventListener('click', closePreview);
+
+    document.getElementById('confirmSend').addEventListener('click', function(){
+      if (isSubmitting) return;
+      isSubmitting = true;
+      var btn = document.getElementById('confirmSend');
+      btn.disabled = true; btn.textContent = 'שולח...';
+
+      var payload = buildPayload();
+      google.script.run
+        .withSuccessHandler(function(res){
+          isSubmitting = false;
+          btn.disabled = false; btn.textContent = 'שליחה עכשיו';
+          closePreview();
+
+          if(res && res.ok){
+            var ok = document.getElementById('toast'); ok.style.display='block';
+            setTimeout(function(){ ok.style.display='none'; }, 3000);
+
+            // איפוס
+            Array.from(document.querySelectorAll('textarea')).forEach(function(t){ t.value=''; });
+            Array.from(document.querySelectorAll('select')).forEach(function(s){ s.value=''; });
+            document.getElementById('date').value='';
+            document.getElementById('time').value='';
+            document.getElementById('manager').value='';
+            document.getElementById('pit').value='';
+            coursesWrap.innerHTML = ''; addCourseRow();
+            updateBtn();
+          } else {
+            var te = document.getElementById('toastErr');
+            te.textContent = 'תקלה: ' + (res && res.error ? res.error : 'לא ידוע');
+            te.style.display='block'; setTimeout(function(){ te.style.display='none'; }, 4000);
+          }
+        })
+        .withFailureHandler(function(err){
+          isSubmitting = false;
+          btn.disabled = false; btn.textContent = 'שליחה עכשיו';
+          var te = document.getElementById('toastErr');
+          te.textContent = 'שגיאת שרת: ' + (err && err.message ? err.message : String(err));
+          te.style.display='block'; setTimeout(function(){ te.style.display='none'; }, 4000);
+        })
+        .submitForm(payload);
+    });
+
+    (function(){
+      var d = new Date();
+      document.getElementById('date').value = d.toISOString().slice(0,10);
+      document.getElementById('time').value = d.toTimeString().slice(0,5);
+      updateBtn();
+    })();
+
+    (function autosizeTextareas(){
+      var tAreas = Array.from(document.querySelectorAll('textarea'));
+      function fit(el){
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight + 6) + 'px';
+      }
+      tAreas.forEach(function(t){
+        fit(t);
+        t.addEventListener('input', function(){ fit(t); });
+      });
+      var observer = new MutationObserver(function(muts){
+        muts.forEach(function(m){
+          Array.from(m.addedNodes || []).forEach(function(n){
+            if (n.nodeType === 1){
+              var ta = n.querySelector && n.querySelector('textarea');
+              if (ta){ fit(ta); ta.addEventListener('input', function(){ fit(ta); }); }
+            }
+          });
+        });
+      });
+      observer.observe(document.getElementById('courses'), { childList:true });
+    })();
+  </script>
+</body>
+</html>
