@@ -1,0 +1,8 @@
+{
+  "timeZone": "Asia/Jerusalem",
+  "exceptionLogging": "STACKDRIVER",
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  }
+}
